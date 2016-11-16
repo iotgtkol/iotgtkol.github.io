@@ -1,6 +1,5 @@
 var LiuWei = {
-	chuck:
-	function(arr, size) {
+	chunk:function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
 		for (var i = 0; i < l; i++) {
