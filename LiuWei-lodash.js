@@ -1,5 +1,5 @@
 var LiuWei = {
-	chuck：
+	chuck:
 	function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
