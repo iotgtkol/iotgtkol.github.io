@@ -17,6 +17,7 @@ var LiuWei = {
 				result.push(array[i])
 			}
 		}
+		return result
 	},
 	concat: function(array, [values]) {
 
