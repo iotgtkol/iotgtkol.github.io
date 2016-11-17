@@ -31,6 +31,24 @@ var LiuWei = {
 		}
 		return result
 	},
+	drop: function(array, n) {
+		if (n == undefined) {
+			array.splice(0)
+		}
+		for (var i = 0; i < n; i++) {
+			array.splice(0, 1)
+		}
+		return array
+	},
+	dropRight: function(array, n) {
+		if (n == 0 || n == undefined) {
+			array.pop()
+		}
+		for (var i = 0; i < n; i++) {
+			array.pop()
+		}
+		return array
+	},
 
 
 }
