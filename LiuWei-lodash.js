@@ -21,13 +21,11 @@ var LiuWei = {
 	concat: function(array, [values]) {
 
 	},
-	difference: function(array, [values]) {
-		var a = []
-		var b = []
+	difference: function(array, values) {
 		var result = []
-		for (var i = 0; i < a.length; i++) {
-			if (a[i] == b[i]) {
-				result.push(a[i])
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] != values[i]) {
+				result.push(array[i])
 			}
 		}
 		return result
