@@ -29,6 +29,22 @@ var LiuWei = {
 		}
 		return result
 	},
+	every: function(collection, fn) {
+		for (var i = 0; i < collection.length; i++) {
+			if (fn(collection[i], i, collection)) {
+				return false
+			}
+		}
+		return true
+	},
+	some: function(collection, fn) {
+		for (var i = 0; i < collection.length; i++) {
+			if (fn(collection[i], i, collection) == true) {
+				return true
+			}
+		}
+		return false
+	},
 	reduce: function(arr, fn, initial) {
 		var sum = initial
 		var start = 0
