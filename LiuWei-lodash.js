@@ -45,17 +45,17 @@ var LiuWei = {
 		}
 		return false
 	},
-	reduce: function(arr, fn, initial) {
-		var sum = initial
+	reduce = function(arr, fn, initial) {
 		var start = 0
-		if (initial == undefined) {
+		if (initial === undefined) {
 			initial = arr[0]
 			start = 1
 		}
 		for (var i = start; i < arr.length; i++) {
-			sum = fn(sum, arr[i])
+			initial = fn(initial, arr[i])
+
 		}
-		return sum
+		return initial
 	},	
 	chunk:function(arr, size) {
 		var l = Math.ceil(arr.length / size)
