@@ -54,7 +54,7 @@ var LiuWei = {
 		}
 		return start
 	},
-	reduce = function(arr, fn, initial) {
+	reduce: function(arr, fn, initial) {
 		var start = 0
 		if (initial === undefined) {
 			initial = arr[0]
