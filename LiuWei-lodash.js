@@ -8,8 +8,8 @@ var LiuWei = {
 	},
 	filter: function(arr, fn) {
 		for (var i = 0; i < arr.length; i++) {
-			if (!fn(arr[i], i, arr) == true) {
-				arr.splice(arr[i], 1)
+			if (!fn(arr[i], i, arr)) {
+				arr.splice(i, 1)
 			}
 		}
 		return arr
