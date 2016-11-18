@@ -45,7 +45,7 @@ var LiuWei = {
 		}
 		return false
 	},
-	reject = function(arr, fn) {
+	reject: function(arr, fn) {
 		var start = []
 		for (var i = 0; i < arr.length; i++) {
 			if (!fn(arr[i], i, arr)) {
