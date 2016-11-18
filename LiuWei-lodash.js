@@ -15,24 +15,24 @@ var LiuWei = {
 		}
 		return arr
 	},
-	partition=function(arr,fn){
-	var result=[
-	[],
-	[]
-	]
-	for(var i=0;i<arr.length;i++){
-		if(fn(arr[i],i,arr)){
-			result[0].push(arr[i])
-		}else{
-			result[1].push(arr[i])
+	partition = function(arr, fn) {
+		var result = [
+			[],
+			[]
+		]
+		for (var i = 0; i < arr.length; i++) {
+			if (fn(arr[i], i, arr)) {
+				result[0].push(arr[i])
+			} else {
+				result[1].push(arr[i])
+			}
 		}
-	}
-	return result
-        },
+		return result
+	},
 	reduce: function(arr, fn, initial) {
 		var sum = initial
 		var start = 0
-		if (initial === undefined) {
+		if (initial == undefined) {
 			initial = arr[0]
 			start == 1
 		}
