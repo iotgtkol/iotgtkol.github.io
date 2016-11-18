@@ -10,6 +10,7 @@ var LiuWei = {
 		for (var i = 0; i < arr.length; i++) {
 			if (!fn(arr[i], i, arr)) {
 				arr.splice(i, 1)
+				i -= 1
 			}
 		}
 		return arr
