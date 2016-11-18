@@ -15,6 +15,32 @@ var LiuWei = {
 		}
 		return arr
 	},
+	partition=function(arr,fn){
+	var result=[
+	[],
+	[]
+	]
+	for(var i=0;i<arr.length;i++){
+		if(fn(arr[i],i,arr)){
+			result[0].push(arr[i])
+		}else{
+			result[1].push(arr[i])
+		}
+	}
+	return result
+        },
+	reduce: function(arr, fn, initial) {
+		var sum = initial
+		var start = 0
+		if (initial === undefined) {
+			initial = arr[0]
+			start == 1
+		}
+		for (var i = start; i < arr.length; i++) {
+			sum = fn(sum, arr[i])
+		}
+		return sum
+	},	
 	chunk:function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
