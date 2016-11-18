@@ -1,4 +1,19 @@
 var LiuWei = {
+	map: function(arr, fn) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			result.push(fn(arr[i], i, arr))
+		}
+		return result
+	},
+	filter: function(arr, fn) {
+		for (var i = 0; i < arr.length; i++) {
+			if (!fn(arr[i], i, arr) == true) {
+				arr.splice(arr[i], 1)
+			}
+		}
+		return arr
+	},
 	chunk:function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
