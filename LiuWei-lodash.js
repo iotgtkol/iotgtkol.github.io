@@ -34,7 +34,7 @@ var LiuWei = {
 		var start = 0
 		if (initial == undefined) {
 			initial = arr[0]
-			start == 1
+			start = 1
 		}
 		for (var i = start; i < arr.length; i++) {
 			sum = fn(sum, arr[i])
