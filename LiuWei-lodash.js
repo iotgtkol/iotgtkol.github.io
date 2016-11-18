@@ -90,13 +90,15 @@ var LiuWei = {
 
 	},
 	difference: function(array, values) {
-		var result = []
 		for (var i = 0; i < array.length; i++) {
-			if (array[i] != values[i]) {
-				result.push(array[i])
+			for (var j = 0; j < values.length; j++) {
+				if (array[i] == values[j]) {
+					array.splice(i, 1)
+					i--
+				}
 			}
 		}
-		return result
+		return array
 	},
 	drop: function(array, n) {
 		if (n == undefined) {
