@@ -15,7 +15,7 @@ var LiuWei = {
 		}
 		return arr
 	},
-	partition = function(arr, fn) {
+	partition: function(arr, fn) {
 		var result = [
 			[],
 			[]
@@ -109,6 +109,14 @@ var LiuWei = {
 		}
 		return result
 	},
+	pullAt: function(array, indexes) {
+		var result = []
+		for (var i = 1; i < arguments.length; i++) {
+			result.push(array[arguments[i]])
+		}
+		return result
+	},
+	
 
 
 }
