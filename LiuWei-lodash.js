@@ -45,6 +45,15 @@ var LiuWei = {
 		}
 		return false
 	},
+	reject = function(arr, fn) {
+		var start = []
+		for (var i = 0; i < arr.length; i++) {
+			if (!fn(arr[i], i, arr)) {
+				start.push(arr[i])
+			}
+		}
+		return start
+	},
 	reduce = function(arr, fn, initial) {
 		var start = 0
 		if (initial === undefined) {
