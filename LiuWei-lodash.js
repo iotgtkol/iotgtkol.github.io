@@ -65,7 +65,7 @@ var LiuWei = {
 		}
 		return initial
 	},
-	chuck: function(arr, size) {
+	chunk: function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
 		for (var i = 0; i < l; i++) {
@@ -101,7 +101,8 @@ var LiuWei = {
 	},
 	drop: function(array, n) {
 		if (n == undefined) {
-			array.splice(0)
+			n == 1
+			array.splice(0, 1)
 		}
 		for (var i = 0; i < n; i++) {
 			array.splice(0, 1)
@@ -109,8 +110,11 @@ var LiuWei = {
 		return array
 	},
 	dropRight: function(array, n) {
-		if (n == 0 || n == undefined) {
+		if (n == undefined) {
 			array.pop()
+		}
+		if (n == 0) {
+			return array
 		}
 		for (var i = 0; i < n; i++) {
 			array.pop()
@@ -171,6 +175,63 @@ var LiuWei = {
 		for (var key in obj) {
 			result[obj[key]] = obj[key]
 		}
+	},
+	fromPairs: function(arr) {
+		var obj = {}
+		for (var i = 0; i < arr.length; i++) {
+			obj[arr[i][0]] = arr[i][1]
+		}
+		return obj
+	},
+	head: function(arr) {
+		return arr.shift(0, 1)
+	},
+	indexOf: function(arr, value, fromindex) {
+		if (fromindex == undefined) {
+			fromindex = 0
+		}
+		for (var i = fromindex; i < arr.length; i++) {
+			if (arr[i] == value) {
+				return i
+				break;
+			}
+		}
+	},
+	initial: function(arr) {
+		var result = []
+		for (var i = 0; i < arr.length - 1; i++) {
+			result.push(arr[i])
+		}
+		return result
+	},
+	tail: function(arr) {
+		var result = []
+		for (var i = 1; i < arr.length; i++) {
+			result.push(arr[i])
+		}
+		return result
+	},
+	take: function(arr, n) {
+		var result = []
+		if (n == undefined) {
+			n = 1
+		}
+		if (n > arr.length) {
+			n = arr.length
+		}
+		for (var i = 0; i < n; i++) {
+			result.push(arr[i])
+		}
+		return result
+	},
+	takeRight: function(arr, n) {
+		if (n == undefined) {
+			n = 1
+		}
+		if (n == 0) {
+			return []
+		}
+		return arr.slice(-n)
 	},
 
 }
