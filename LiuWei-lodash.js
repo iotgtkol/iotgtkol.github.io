@@ -8,9 +8,8 @@ var LiuWei = {
 	},
 	filter: function(arr, fn) {
 		for (var i = 0; i < arr.length; i++) {
-			if (!fn(arr[i], i, arr)) {
-				arr.splice(i, 1)
-				i -= 1
+			if (!fn(arr[i], i, arr) == true) {
+				arr.splice(arr[i], 1)
 			}
 		}
 		return arr
@@ -65,8 +64,8 @@ var LiuWei = {
 
 		}
 		return initial
-	},	
-	chunk:function(arr, size) {
+	},
+	chuck: function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
 		for (var i = 0; i < l; i++) {
@@ -80,13 +79,13 @@ var LiuWei = {
 	compact: function(array) {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
-			if (array[i]) {
+			if (typeof array[i] == 'number') {
 				result.push(array[i])
 			}
 		}
 		return result
 	},
-	concat: function(array, [values]) {
+	concat: function(array, values) {
 
 	},
 	difference: function(array, values) {
@@ -118,6 +117,30 @@ var LiuWei = {
 		}
 		return array
 	},
+	fill: function(array, value, start, end) {
+
+		if (start == undefined && end == undefined) {
+			start == 0
+			end == array.length
+		}
+		for (var i = start; i < end; i++) {
+			array[i] = value
+		}
+		return array
+	},
+	flatten: function(array) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] instanceof Array) {
+				for (var j = 0; j < array[i].length; j++) {
+					result.push(array[i][j])
+				}
+			} else {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
 	initial: function(array) {
 		var result = []
 		for (var i = 0; i < array.length - 1; i++) {
@@ -143,7 +166,11 @@ var LiuWei = {
 		}
 		return result
 	},
-	
-
+	invert: function(obj) {
+		var result = {}
+		for (var key in obj) {
+			result[obj[key]] = obj[key]
+		}
+	},
 
 }
