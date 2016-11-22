@@ -233,5 +233,48 @@ var LiuWei = {
 		}
 		return arr.slice(-n)
 	},
+	join: function(arr, value) {
+		var result = ''
+		for (var i = 0; i < arr.length; i++) {
+			result += arr[i] + value
+		}
+		return result
+	},
+	last: function(arr) {
+		var l = arr.length
+		var a
+		a = arr[l - 1]
+		return a
+	},
+	pullAll: function(arr1, arr2) {
+		for (var i = 0; i < arr2.length; i++) {
+			for (var j = 0; j < arr1.length; j++) {
+				if (arr1[j] == arr2[i]) {
+					arr1.splice(j, 1)
+				}
+			}
+		}
+		return arr1
+	},
+	xor: function(arr1, arr2) {
+		var result = []
+		for (var i = 0; i < arr1.length; i++) {
+			if (arr1[i] != arr2[i]) {
+				result.push(arr1[i])
+				result.push(arr2[i])
+			}
+		}
+		return result
+	},
+	xorBy: function(arr1, arr2, fn) {
+		var result = []
+		for (var i = 0; i < arr1.length; i++) {
+			if (fn(arr1[i]) != fn(arr2[i])) {
+				result.push(arr1[i])
+				result.push(arr2[i])
+			}
+		}
+		return result
+	},
 
 }
