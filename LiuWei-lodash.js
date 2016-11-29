@@ -79,14 +79,11 @@ var LiuWei = {
 	compact: function(array) {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
-			if (typeof array[i] == 'number') {
+			if (array[i]) {
 				result.push(array[i])
 			}
 		}
 		return result
-	},
-	concat: function(array, values) {
-
 	},
 	difference: function(array, values) {
 		for (var i = 0; i < array.length; i++) {
@@ -124,8 +121,8 @@ var LiuWei = {
 	fill: function(array, value, start, end) {
 
 		if (start == undefined && end == undefined) {
-			start == 0
-			end == array.length
+			start = 0
+			end = array.length
 		}
 		for (var i = start; i < end; i++) {
 			array[i] = value
@@ -175,6 +172,7 @@ var LiuWei = {
 		for (var key in obj) {
 			result[obj[key]] = obj[key]
 		}
+		return result
 	},
 	fromPairs: function(arr) {
 		var obj = {}
@@ -196,6 +194,17 @@ var LiuWei = {
 				break;
 			}
 		}
+	},
+	lastIndexOf: function(arr, value, fromIndex) {
+		if (fromIndex == undefined) {
+			fromIndex = arr.length
+		}
+		for (var i = fromIndex; i >= 0; i--) {
+			if (arr[i] == value) {
+				return i
+			}
+		}
+		return i
 	},
 	initial: function(arr) {
 		var result = []
@@ -235,7 +244,10 @@ var LiuWei = {
 	},
 	join: function(arr, value) {
 		var result = ''
-		for (var i = 0; i < arr.length; i++) {
+		if (value == undefined) {
+			value = ','
+		}
+		for (var i = 0; i < arr.length - 1; i++) {
 			result += arr[i] + value
 		}
 		return result
@@ -276,5 +288,121 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *将数组的值进行反向排序
+	 *
+	 */
+	reverse: function(arr) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			result.unshift(arr[i])
+		}
+		return result
+	},
+	/**
+	 *将value值与数组中的每一项进行比较，如果小于那一项其在数组中的位置就为其前一项
+	 *值大于最后一项，其位置就为第arr.length项。  结果输出位比较之后value在数组中的比较位置
+	 */
+	sortedIndex: function(arr, value) {
+		var result
+		for (var i = 0; i < arr.length; i++) {
+			if (value < arr[0]) {
+				result = 0
+			}
+			if (value > arr[arr.length - 1]) {
+				result = arr.length
+			}
+			if (value > arr[i] && value < arr[i + 1]) {
+				result = i + 1
+			}
+		}
+		return result
+	},
+	/**
+	 *数组各项求值
+	 */
+	sum: function(arr) {
+		var sum = 0
+		for (var i = 0; i < arr.length; i++) {
+			sum += arr[i]
+		}
+		return sum
+	},
+	slice: function(start, end) {
+		var result = []
+		if (start === undefined) {
+			start = 0
+		}
+		if (end === undefined) {
+			end = this.length
+		}
+		for (var i = start; i < end; i++) {
+			result.push(this[i])
+		}
+		return result
+	},
+	arrayToLinkedList: function(array) {
+		if (array.length == 0) { //假如数组为空的话，直接返回{next: null}
+			return {
+				next: null
+			}
+		}
+		var result = [] //定义将value的值，利用循环
+		for (var i = 0; i < array.length; i++) //{赋给值（也为一个对象，）得值
+			result.push({
+			value: array[i],
+			next: null
+		})
+		for (var i = 0; i < array.length - 1; i++) { //
+			result[i].next = result[i + 1]
+		}
+		return result[0]
+	},
+	/**
+	 *从左开始对比数组每一项值，如果值等于value就结束对比，并返回数组下标
+	 */
+	sortedIndexOf: function(array, value) {
+		for (var i = 0; i < arrar.length; i++) {
+			if (array[i] === value) {
+				return i
+				break;
+			}
+		}
+		return i
+	},
+	/**
+	 *从数组右开始对比数组，如果值等于value则立即结束，并返回数组下标
+	 *
+	 */
+	sortedLastIndex: function(array, value) {
+		for (var i = array.length - 1; i >= 0; i--) {
+			if (array[i] === value) {
+				return i
+				break;
+			}
+		}
+		return i
+	},
+	/**
+	 *遍历数组，其中只保留每个元素的第一次出现。
+	 *结果值的顺序由它们在数组中出现的顺序确定。
+	 */
+	uniq: function(array) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (result.indexOf(array[i]) == -1) {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
+
+
+	/**
+	 *
+	 *
+	 */
+
+
 
 }
