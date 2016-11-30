@@ -362,7 +362,7 @@ var LiuWei = {
 	 *从左开始对比数组每一项值，如果值等于value就结束对比，并返回数组下标
 	 */
 	sortedIndexOf: function(array, value) {
-		for (var i = 0; i < arrar.length; i++) {
+		for (var i = 0; i < array.length; i++) {
 			if (array[i] === value) {
 				return i
 				break;
@@ -377,7 +377,7 @@ var LiuWei = {
 	sortedLastIndex: function(array, value) {
 		for (var i = array.length - 1; i >= 0; i--) {
 			if (array[i] === value) {
-				return i
+				return i+1
 				break;
 			}
 		}
