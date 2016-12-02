@@ -362,7 +362,7 @@ var LiuWei = {
 	 *从左开始对比数组每一项值，如果值等于value就结束对比，并返回数组下标
 	 */
 	sortedIndexOf: function(array, value) {
-		for (var i = 0; i < array.length; i++) {
+		for (var i = 0; i < arrar.length; i++) {
 			if (array[i] === value) {
 				return i
 				break;
@@ -377,7 +377,7 @@ var LiuWei = {
 	sortedLastIndex: function(array, value) {
 		for (var i = array.length - 1; i >= 0; i--) {
 			if (array[i] === value) {
-				return i+1
+				return i
 				break;
 			}
 		}
@@ -396,8 +396,96 @@ var LiuWei = {
 		}
 		return result
 	},
-
-
+	isArray: function(value) {
+		if (value instanceof Array) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *类数组是：不是数组，但是有 length 属性，且属性值为非负 Number
+	 *length上限值 MAX_ARRAY_INDEX（最大安全整数 2的53次幂减1）
+	 */
+	isArrayLike: function(value) {
+		if (value.length >= 0) {
+			return true
+		} else {
+			return false
+		}
+	},
+	isArrayLikeObject: function(value) {
+		if ((value.length >= 0) && (value instanceof Object)) {
+			return true
+		} else {
+			return false
+		}
+	},
+	isBoolean: function(value) {
+		if (value === true || value === false) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *判断一个数是否为正整数
+	 */
+	isInteger: function(value) {
+		if (typeof(value) == 'number' && value % 1 == 0) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *部分匹配，假如有一个属性和值都相等，那即返回true 
+	 *
+	 */
+	isMatch: function(object, source) {
+		for (var key in object) {
+			for (var key1 in source) {
+				if (key == key1 && object[key] == source[key1]) {
+					return true
+				}
+			}
+		}
+		return false
+	},
+	/**
+	 *通过iteratee映射对比array及values的值。输出不相同的值组成一个新的数组。
+	 *iteratee分为函数和对象两种情况
+	 */
+	differenceBy: function(array, values, iteratee) {
+		if (typeof(iteratee) == "string") {
+			for (var i = 0; i < array.length; i++) {
+				for (var j = 0; j < values.length; j++) {
+					if (array[i][iteratee] !== values[j][iteratee]) {
+						return array[i]
+					}
+				}
+			}
+			return array
+		}
+		if (typeof(iteratee) == 'function') {
+			for (var i = 0; i < array.length; i++) {
+				if (iteratee(array[i]) != iteratee(values[i])) {
+					return array[i]
+				}
+			}
+			return array
+		}
+	},
+	differenceWith: function(array, values, comparator) {
+		for (var i = 0; i < array.length; i++) {
+			for (var j = 0; j < values.length; j++) {
+				if (comparator(array[i] !== values[j])) {
+					return array[i]
+				}
+			}
+		}
+		return array
+	},
 	/**
 	 *
 	 *
