@@ -1,12 +1,31 @@
 var LiuWei = {
-	map: function(arr, fn) {
+	/**
+	 *创建一个新的数组，数组的值由collection的每个元素通过fn迭代输出
+	 *iteratee援引三个论据(value, index|key, collection)
+	 *collection可以为对象 数组。作为值通过迭代得到新数组
+	 *输入:map({ 'a': 4, 'b': 8 }, square)
+	 *输出:[16, 64] (iteration order is not guaranteed)
+	 *输入:map([{ 'user': 'barney' },{ 'user': 'fred' }], 'user')
+	 *输出:['barney', 'fred']
+	 */
+	map: function(collection, iteratee) {
 		var result = []
 		for (var i = 0; i < arr.length; i++) {
 			result.push(fn(arr[i], i, arr))
 		}
 		return result
 	},
-	filter: function(arr, fn) {
+	/**
+	 *迭代collection所有元素，返回通过predicate为truly的所有元素
+	 *predicate援引三个论据(value, index|key, collection)[predicate=_.identity]
+	 *collection为(object/array)
+	 *var user =[{ 'user': 'barney', 'age': 36, 'active': true },{ 'user': 'fred',   'age': 40, 'active': false }]
+	 *输入:filter(user, function(o) { return !o.active; })
+	 *输出: objects for ['fred']
+	 *输入:filter(users, ['active', false])
+	 *objects for ['fred']
+	 */
+	filter: function(collection, predicate) {
 		for (var i = 0; i < arr.length; i++) {
 			if (!fn(arr[i], i, arr) == true) {
 				arr.splice(arr[i], 1)
@@ -14,7 +33,18 @@ var LiuWei = {
 		}
 		return arr
 	},
-	partition: function(arr, fn) {
+	/**
+	 *创建由数组分裂的有两组的一个数组，第一个为通过断言为真得出对象第一个属性的值，第二个断言为假的其他属性的值
+	 *predicate援引一个论据
+	 *var users = [{ 'user': 'barney',  'age': 36, 'active': false },{ 'user': 'fred',    'age': 40, 'active': true },{ 'user': 'pebbles', 'age': 1,  'active': false }]
+	 *输入:partition(users, function(o) { return o.active; })
+	 *输出:objects for [['fred'], ['barney', 'pebbles']]
+	 *输入:partition(users, ['active', false])
+	 *输出:objects for [['barney', 'pebbles'], ['fred']]
+	 *输入:partition(users, 'active')
+	 *输出:objects for [['fred'], ['barney', 'pebbles']]
+	 */
+	partition: function(collection, predicate) {
 		var result = [
 			[],
 			[]
@@ -28,7 +58,21 @@ var LiuWei = {
 		}
 		return result
 	},
-	every: function(collection, fn) {
+	/**
+	 *通过递归检查所有元素通过断言是否为真的结果，如果为假，立马停止，returen false;
+	 *collection为(object/array)
+	 *Returns true if all elements pass the predicate check, else false.
+	 *var users = [{ 'user': 'barney', 'age': 36, 'active': false },{ 'user': 'fred',   'age': 40, 'active': false }];
+	 *输入:every([true, 1, null, 'yes'], Boolean)
+	 *输出:false
+	 *输入:every(users, { 'user': 'barney', 'active': false })
+	 *输出:false
+	 *输入:every(users, 'active')
+	 *输出:false
+	 *输入:every(users, ['active', false]);
+	 *输出: true
+	 */
+	every: function(collection, predicate) {
 		for (var i = 0; i < collection.length; i++) {
 			if (fn(collection[i], i, collection)) {
 				return false
@@ -36,6 +80,19 @@ var LiuWei = {
 		}
 		return true
 	},
+	/**
+	 *检查断言是否对集合返回的是真值，如果为真，就立即结束递归，并返回 true
+	 *collection (Array|Object): The collection to iterate over
+	 *[predicate=_.identity] (Function): The function invoked per iteration
+	 *返回的结果为如有一个为真，就返回真，否则为假
+	 *输出:some([null, 0, 'yes', false], Boolean);
+	 *输入:true
+	 *var users = [{ 'user': 'barney', 'active': true },{ 'user': 'fred',   'active': false }];
+	 *输出:some(users, { 'user': 'barney', 'active': false });
+	 *输入:true
+	 *输出:some(users, ['active', false]);
+	 *输入:false
+	 */
 	some: function(collection, fn) {
 		for (var i = 0; i < collection.length; i++) {
 			if (fn(collection[i], i, collection) == true) {
@@ -44,7 +101,19 @@ var LiuWei = {
 		}
 		return false
 	},
-	reject: function(arr, fn) {
+	/**
+	 *与filter相反，返回的是假值，检查collection通过predicate是否为真值，如果为真，立即停止递归，并返回对象的假值
+	 *collection (Array|Object): The collection to iterate over.
+	 *(Array): Returns the new filtered array.
+	 *var users = [{ 'user': 'barney', 'age': 36, 'active': false },{ 'user': 'fred',   'age': 40, 'active': true }];
+	 *输入:reject(users, function(o) { return !o.active; });
+	 *输出: objects for ['fred']
+	 *输入:reject(users, ['active', false]);
+	 *输出:objects for ['fred']
+	 *输入:reject(users, 'active');
+	 *输出: objects for ['barney']
+	 */
+	reject: function(collection, predicate) {
 		var start = []
 		for (var i = 0; i < arr.length; i++) {
 			if (!fn(arr[i], i, arr)) {
@@ -53,7 +122,20 @@ var LiuWei = {
 		}
 		return start
 	},
-	reduce: function(arr, fn, initial) {
+	/**
+	 *减少collection的值，这个值是集合通过iteratee运行每个元素的累积结果，每次连续调用都为下一次调用的初始值。如果没有给出累积，则使用集合的第一个元素作为初始值
+	 *iteratee有四个参数
+	 *collection (Array|Object): The collection to iterate over.
+	 *[accumulator] (*): The initial value.
+	 *输入:reduce([1, 2], function(sum, n) {return sum + n;}, 0);
+	 *输出:3
+	 *输入:reduce({ 'a': 1, 'b': 2, 'c': 1 }, function(result, value, key) {
+            (result[value] || (result[value] = [])).push(key);
+                 return result;
+            }, {});
+	 *输出:{ '1': ['a', 'c'], '2': ['b'] }
+	 */
+	reduce: function(collection, iteratee, accumulator) {
 		var start = 0
 		if (initial === undefined) {
 			initial = arr[0]
@@ -65,6 +147,10 @@ var LiuWei = {
 		}
 		return initial
 	},
+	/**
+	 *
+	 *
+	 */
 	chunk: function(arr, size) {
 		var l = Math.ceil(arr.length / size)
 		var result = new Array(l)
@@ -76,6 +162,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	compact: function(array) {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
@@ -85,6 +175,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	difference: function(array, values) {
 		for (var i = 0; i < array.length; i++) {
 			for (var j = 0; j < values.length; j++) {
@@ -96,6 +190,10 @@ var LiuWei = {
 		}
 		return array
 	},
+	/**
+	 *
+	 *
+	 */
 	drop: function(array, n) {
 		if (n == undefined) {
 			n == 1
@@ -106,6 +204,10 @@ var LiuWei = {
 		}
 		return array
 	},
+	/**
+	 *
+	 *
+	 */
 	dropRight: function(array, n) {
 		if (n == undefined) {
 			array.pop()
@@ -118,6 +220,10 @@ var LiuWei = {
 		}
 		return array
 	},
+	/**
+	 *
+	 *
+	 */
 	fill: function(array, value, start, end) {
 
 		if (start == undefined && end == undefined) {
@@ -129,6 +235,10 @@ var LiuWei = {
 		}
 		return array
 	},
+	/**
+	 *
+	 *
+	 */
 	flatten: function(array) {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
@@ -142,6 +252,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	initial: function(array) {
 		var result = []
 		for (var i = 0; i < array.length - 1; i++) {
@@ -149,6 +263,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	intersection: function(arr1, arr2) {
 		var result = []
 		for (i = 0; i < arr1.length; i++) {
@@ -160,6 +278,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	pullAt: function(array, indexes) {
 		var result = []
 		for (var i = 1; i < arguments.length; i++) {
@@ -167,6 +289,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	invert: function(obj) {
 		var result = {}
 		for (var key in obj) {
@@ -174,6 +300,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	fromPairs: function(arr) {
 		var obj = {}
 		for (var i = 0; i < arr.length; i++) {
@@ -181,9 +311,17 @@ var LiuWei = {
 		}
 		return obj
 	},
+	/**
+	 *
+	 *
+	 */
 	head: function(arr) {
 		return arr.shift(0, 1)
 	},
+	/**
+	 *
+	 *
+	 */
 	indexOf: function(arr, value, fromindex) {
 		if (fromindex == undefined) {
 			fromindex = 0
@@ -195,6 +333,10 @@ var LiuWei = {
 			}
 		}
 	},
+	/**
+	 *
+	 *
+	 */
 	lastIndexOf: function(arr, value, fromIndex) {
 		if (fromIndex == undefined) {
 			fromIndex = arr.length
@@ -206,6 +348,10 @@ var LiuWei = {
 		}
 		return i
 	},
+	/**
+	 *
+	 *
+	 */
 	initial: function(arr) {
 		var result = []
 		for (var i = 0; i < arr.length - 1; i++) {
@@ -213,6 +359,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	tail: function(arr) {
 		var result = []
 		for (var i = 1; i < arr.length; i++) {
@@ -220,6 +370,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	take: function(arr, n) {
 		var result = []
 		if (n == undefined) {
@@ -233,6 +387,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	takeRight: function(arr, n) {
 		if (n == undefined) {
 			n = 1
@@ -242,6 +400,10 @@ var LiuWei = {
 		}
 		return arr.slice(-n)
 	},
+	/**
+	 *
+	 *
+	 */
 	join: function(arr, value) {
 		var result = ''
 		if (value == undefined) {
@@ -252,12 +414,20 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	last: function(arr) {
 		var l = arr.length
 		var a
 		a = arr[l - 1]
 		return a
 	},
+	/**
+	 *
+	 *
+	 */
 	pullAll: function(arr1, arr2) {
 		for (var i = 0; i < arr2.length; i++) {
 			for (var j = 0; j < arr1.length; j++) {
@@ -268,6 +438,10 @@ var LiuWei = {
 		}
 		return arr1
 	},
+	/**
+	 *
+	 *
+	 */
 	xor: function(arr1, arr2) {
 		var result = []
 		for (var i = 0; i < arr1.length; i++) {
@@ -278,6 +452,10 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 *
+	 *
+	 */
 	xorBy: function(arr1, arr2, fn) {
 		var result = []
 		for (var i = 0; i < arr1.length; i++) {
@@ -290,6 +468,10 @@ var LiuWei = {
 	},
 	/**
 	 *将数组的值进行反向排序
+	 *
+	 */
+	/**
+	 *
 	 *
 	 */
 	reverse: function(arr) {
@@ -487,10 +669,219 @@ var LiuWei = {
 		return array
 	},
 	/**
+	 *判断value 与other值的大小
+	 *value > other 返回真   否则为假
+	 */
+	lt: function(value, other) {
+		if (other > value) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *判断value与other的大小
+	 *value小于等于other 返回true  否则为false
+	 */
+	lte: function(value, other) {
+		if (value <= other) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *将对象，string转化为数组，当为数字时，数组为空;当为null 时 数组为空
+	 *输入:toArray({ 'a': 1, 'b': 2 })
+	 *输出:[1, 2]
+	 *输入:toArray('abc');
+	 *输出:['a', 'b', 'c']
+	 */
+	toArray: function(value) { // 值转变为数组
+		var result = []
+
+		if (typeof(value) == 'object') {
+			for (var key in value) {
+				result.push(value[key])
+			}
+			return result
+		}
+		if (typeof(value) == 'string') { //splic 方法  If an empty string ("")is used as the separator, the string is split between each character.
+			return value.split('')
+		}
+		if (typeof(value) == 'number' || typeof(value) == 'null') {
+			return []
+		}
+	},
+	/**
+	 *求数组各项的和
+	 *
+	 */
+	sum: function(arr) {
+		var result = 0
+		for (var i = 0; i < arr.length; i++) {
+			result += arr[i]
+		}
+		return result
+	},
+	/**
+	 *求数组通过iteratee后数组每项值得和，
+	 *iteratee 为object function;
+	 *输入:sumBy([{ 'n': 4 }, { 'n': 2 }, { 'n': 8 }, { 'n': 6 }], function(o) { return o.n; })
+	 *输出:20
+	 *输入:sumBy([{ 'n': 4 }, { 'n': 2 }, { 'n': 8 }, { 'n': 6 }], 'n')
+	 *输出:20
+	 */
+	sumBy: function(array, iteratee) {
+		var result = 0
+		for (var i = 0; i < array.length; i++) {
+			if (iteratee instanceof Object) {
+				result += iteratee(array[i])
+			} else {
+				result += array[i][iteratee]
+			}
+		}
+		return result
+	},
+	/**
+	 *如果number大于lower 并且小于 upper  返回number   如果number比lower还小，则返回lower，若number比upper大则返回upper
+	 *输入:clamp(-10, -5, 5)
+	 *输出:-5
+	 *输入:clamp(10, -5, 5)
+	 *输出:5
+	 */
+	clamp: function(number, lower, upper) {
+		if (number > lower && number < upper) {
+			return number
+		} else if (number < lower) {
+			return lower
+		} else if (number > upper) {
+			return upper
+		}
+	},
+	/**
+	 *判断number是否在start与end之间，在之间则返回true 否则返回false
+	 *当end为nudefined时 其值为零，
+	 *输入:inRange(3, 2, 4)
+	 *输出:true
+	 *输入:inRange(-3, -2, -6)
+	 *输入:true
+	 *输出:inRange(4, 2)
+	 *输出:false
+	 *输入:inRange(5.2, 4)
+	 *输出:false
+	 */
+	inRange: function(number, start, end) {
+		if (end == undefined) {
+			end = 0
+		}
+		if (start > end) {
+			if (number < start && number > end) {
+				return true
+			} else {
+				return false
+			}
+		}
+		if (start < end) {
+			if (number > start && number < end) {
+				return true
+			} else {
+				return false
+			}
+		}
+	},
+	/**
+	 *两数相减
+	 *输入:subtract(6,4)
+	 *输出:2
+	 */
+	subtract: function(minuend, subtrahend) {
+		return minuend - subtrahend
+	},
+	/**
+	 *求数组项最大值的项
+	 *当数组的长度为零(即为空数组时)返回undefined
+	 *输入:max([4, 2, 8, 6])
+	 *输出:8
+	 *输入:max([])
+	 *输出:undefined
+	 */
+	max: function(array) {
+		var tamp = 0
+		if (array.length == 0) {
+			return undefined
+		}
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] > tamp) {
+				tamp = array[i]
+			}
+		}
+		return tamp
+	},
+	/**
 	 *
 	 *
 	 */
 
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
 
 
 }
