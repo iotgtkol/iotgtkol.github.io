@@ -401,6 +401,42 @@ var LiuWei = {
 		return arr.slice(-n)
 	},
 	/**
+	 *通过predicate断言array数组值得true或false  如为真则返回这项push进新数组。
+	 *predicate可能为array value index
+	 *为index时  检索数组每一项通过后的真值，并传进新数组
+	 *输入:takeRightwhile([{ 'user': 'barney',  'active': true },{ 'user': 'fred',    'active': false },{ 'user': 'pebbles', 'active': false }],  ['active', false])
+	 *输出:[{ 'user': 'fred',    'active': false },{ 'user': 'pebbles', 'active': false }]
+	 *输入:takeRightwhile([{ 'user': 'barney',  'active': true },{ 'user': 'fred',    'active': false },{ 'user': 'pebbles', 'active': false }], function(o) { return !o.active; })
+	 *输出:[{ 'user': 'barney',  'active': true }]
+	 *输入:takeRightwhile([{ 'user': 'barney',  'active': true },{ 'user': 'fred',    'active': false },{ 'user': 'pebbles', 'active': false }],  'active')
+	 *输出:[]
+	 */
+	takeRightwhile: function(array, predicate) {
+		var result = []
+		if (typeof(predicate) == 'function') {
+			for (var i = 0; i < array.length; i++) {
+				if (predicate(array[i])) {
+					result.push(array[i])
+				}
+			}
+		}
+		if (Array.isArray(predicate)) {
+			for (var i = 0; i < array.length; i++) {
+				for (var key in array[i]) {
+					if (predicate[0] === array[i].key || predicate[1] === array[i][key]) {
+						result.push(array[i])
+					}
+				}
+			}
+		}
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] === predicate) {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
+	/**
 	 *
 	 *
 	 */
