@@ -675,11 +675,12 @@ var LiuWei = {
 	 *iteratee分为函数和对象两种情况
 	 */
 	differenceBy: function(array, values, iteratee) {
+		var result = []
 		if (typeof(iteratee) == "string") {
 			for (var i = 0; i < array.length; i++) {
 				for (var j = 0; j < values.length; j++) {
 					if (array[i][iteratee] !== values[j][iteratee]) {
-						return array[i]
+						return result.push(array[i])
 					}
 				}
 			}
@@ -687,16 +688,17 @@ var LiuWei = {
 		if (typeof(iteratee) == 'function') {
 			for (var i = 0; i < array.length; i++) {
 				if (iteratee(array[i]) != iteratee(values[i])) {
-					return array[i]
+					return result.push(array[i])
 				}
 			}
 		}
 	},
 	differenceWith: function(array, values, comparator) {
+		var result = []
 		for (var i = 0; i < array.length; i++) {
 			for (var j = 0; j < values.length; j++) {
 				if (comparator(array[i] !== values[j])) {
-					return array[i]
+					return result.push(array[i])
 				}
 			}
 		}
