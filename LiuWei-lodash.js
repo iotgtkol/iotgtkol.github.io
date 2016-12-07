@@ -683,7 +683,6 @@ var LiuWei = {
 					}
 				}
 			}
-			return array
 		}
 		if (typeof(iteratee) == 'function') {
 			for (var i = 0; i < array.length; i++) {
@@ -691,7 +690,6 @@ var LiuWei = {
 					return array[i]
 				}
 			}
-			return array
 		}
 	},
 	differenceWith: function(array, values, comparator) {
@@ -702,7 +700,6 @@ var LiuWei = {
 				}
 			}
 		}
-		return array
 	},
 	/**
 	 *判断value 与other值的大小
@@ -858,12 +855,33 @@ var LiuWei = {
 	 *
 	 *
 	 */
-
+	xorWith: function(arrays, comparator, fn) {
+		var result = []
+		for (var i = 0; i < arrays.length; i++) {
+			for (var j = 0; j < comparator; j++) {
+				if (fn(arrays[i], comparator[j])) {
+					result.push(arrays[i])
+					result.push(comparator[j])
+				}
+			}
+		}
+		return result
+	},
 	/**
 	 *
 	 *
 	 */
-
+	zip: function(arrays) {
+		var result = [
+			[],
+			[]
+		]
+		for (var i = 0; i < arguments.length; i++) {
+			result[0].push(arguments[i][0])
+			result[1].push(arguments[i][1])
+		}
+		return result
+	},
 	/**
 	 *
 	 *
