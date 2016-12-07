@@ -680,7 +680,7 @@ var LiuWei = {
 			for (var i = 0; i < array.length; i++) {
 				for (var j = 0; j < values.length; j++) {
 					if (array[i][iteratee] !== values[j][iteratee]) {
-						return result.push(array[i])
+						result.push(array[i])
 					}
 				}
 			}
@@ -688,10 +688,11 @@ var LiuWei = {
 		if (typeof(iteratee) == 'function') {
 			for (var i = 0; i < array.length; i++) {
 				if (iteratee(array[i]) != iteratee(values[i])) {
-					return result.push(array[i])
+					result.push(array[i])
 				}
 			}
 		}
+		return result
 	},
 	differenceWith: function(array, values, comparator) {
 		var result = []
@@ -702,6 +703,7 @@ var LiuWei = {
 				}
 			}
 		}
+		return result
 	},
 	/**
 	 *判断value 与other值的大小
