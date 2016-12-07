@@ -699,7 +699,7 @@ var LiuWei = {
 		for (var i = 0; i < array.length; i++) {
 			for (var j = 0; j < values.length; j++) {
 				if (comparator(array[i] !== values[j])) {
-					return result.push(array[i])
+					result.push(array[i])
 				}
 			}
 		}
@@ -890,22 +890,77 @@ var LiuWei = {
 	 *
 	 *
 	 */
-
+	isFunction: function(value) {
+		if (typeof value == "function") {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 *求数组的中间数
+	 *输入:mean([4, 2, 8, 6])
+	 *输出:5
+	 */
+	mean: function(array) {
+		var sum = 0
+		var avg
+		for (var i = 0; i < array.length; i++) {
+			sum += array[i]
+		}
+		avg = sum / array.length
+		return avg
+	},
 	/**
 	 *
 	 *
 	 */
-
+	meanBy: function(array, ite) {
+		var sum = 0
+		var avg
+		for (var i = 0; i < array.length; i++) {
+			if (typeof(ite) == 'function') {
+				sum += ite(array[i])
+			}
+			if (typeof(ite) == 'string') {
+				for (ite in array[i]) {
+					sum += array[i][ite]
+				}
+			}
+		}
+		avg = sum / array.length
+		return avg
+	},
 	/**
 	 *
 	 *
 	 */
-
-	/**
-	 *
-	 *
-	 */
-
+	dropRightWhile: function(array, pre) {
+		var result = []
+		for (var i = array.length - 1; i >= 0; i--) {
+			if (typeof(pre) == 'function') {
+				if (!pre(array[i])) {
+					result.push(array[i])
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (!array[i][pre[0]] == pre[1]) {
+					result.push(array[i])
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (array[i].hasOwnProperty(pre)) {
+					result.push(array[i])
+				}
+			}
+			if (typeof(pre) == 'object') {
+				if (!this.isEqual(array[i], pre)) {
+					result.push(array[i])
+				}
+			}
+		}
+		return result
+	},
 	/**
 	 *
 	 *
