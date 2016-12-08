@@ -698,7 +698,7 @@ var LiuWei = {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
 			for (var j = 0; j < values.length; j++) {
-				if (comparator(array[i] !== values[j])) {
+				if (comparator(array[i], values[j])) {
 					result.push(array[i])
 				}
 			}
@@ -954,8 +954,12 @@ var LiuWei = {
 				}
 			}
 			if (typeof(pre) == 'object') {
-				if (!this.isEqual(array[i], pre)) {
-					result.push(array[i])
+				var key
+				for (key in array[i]) {
+					if (array[i][key] !== pre[key]) {
+						result.push(array[i])
+						break
+					}
 				}
 			}
 		}
@@ -965,7 +969,33 @@ var LiuWei = {
 	 *
 	 *
 	 */
-
+	dropWhile: function(array, pre) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (Array.isArray(pre)) {
+				if (array[i][pre[0]] !== pre[1]) {
+					result.push(array[i])
+				}
+			} else if (typeof(pre) == 'function') {
+				if (!pre(array[i])) {
+					result.push(array[i])
+				}
+			} else if (typeof(pre) == 'object') {
+				var key
+				for (key in array[i]) {
+					if (array[i][key] !== pre[key]) {
+						result.push(array[i])
+						break
+					}
+				}
+			} else if (typeof(pre) == "string") {
+				if (array[i].hasOwnProperty(pre)) {
+					result.push(array[i])
+				}
+			}
+		}
+		return result
+	},
 	/**
 	 *
 	 *
