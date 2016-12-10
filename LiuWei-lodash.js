@@ -494,10 +494,19 @@ var LiuWei = {
 	 */
 	xorBy: function(arr1, arr2, fn) {
 		var result = []
-		for (var i = 0; i < arr1.length; i++) {
-			if (fn(arr1[i]) != fn(arr2[i])) {
-				result.push(arr1[i])
-				result.push(arr2[i])
+		if (typeof(fn) == 'function') {
+			for (var i = 0; i < arr1.length; i++) {
+				if (fn(arr1[i]) != fn(arr2[i])) {
+					result.push(arr1[i])
+					result.push(arr2[i])
+				}
+			}
+		}
+		if (typeof(fn) == 'string') {
+			for (var i = 0; i < arr2.length; i++) {
+				if (arr1[0][fn] != arr2[i][fn]) {
+					result.push(arr2[i])
+				}
 			}
 		}
 		return result
@@ -698,7 +707,7 @@ var LiuWei = {
 		var result = []
 		for (var i = 0; i < array.length; i++) {
 			for (var j = 0; j < values.length; j++) {
-				if (comparator(array[i], values[j])) {
+				if (!comparator(array[i], values[j])) {
 					result.push(array[i])
 				}
 			}
@@ -859,7 +868,7 @@ var LiuWei = {
 	 *
 	 *
 	 */
-	xorWith: function(arrays, comparator, fn) {
+	xorWith: function(obj, other, compare) {
 		var result = []
 		for (var i = 0; i < arrays.length; i++) {
 			for (var j = 0; j < comparator; j++) {
@@ -1000,6 +1009,337 @@ var LiuWei = {
 	 *
 	 *
 	 */
+	intersectionBy: function(arr1, arr2, ite) {
+		var result = []
+		if (typeof(ite) == "function") {
+			for (var i = 0; i < arr1.length; i++) {
+				if (ite(arr1[i]) == ite(arr2[i])) {
+					result.push(arr1[i])
+				}
+			}
+		}
+		if (typeof(ite) == "string") {
+			for (var i = 0; i < arr1.length; i++) {
+				for (var j = 0; j < arr2.length; j++) {
+					if (arr1[i][ite] == arr2[j][ite]) {
+						result.push(arr1[i])
+					}
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	nth: function(array, n) {
+		if (n < 0) {
+			n = array.length + n
+		}
+		return array[n]
+	},
+	/**
+	 *
+	 *
+	 */
+	pull: function(array, v1, v2) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] != v1 && array[i] != v2) {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	intersectionWith: function(arr1, arr2, co) {
+		for (var i = 0; i < arr1.length; i++) {
+			for (var j = 0; j < arr2.length; j++) {
+				if (co(arr1[i], arr2[j])) {
+					return arr1[i]
+				}
+			}
+		}
+	},
+	/**
+	 *
+	 *
+	 */
+	pullAllBy: function(arr, v, ite) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
+				return arr[i]
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	pullAllWith: function(arr, v, co) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			if (!co(arr[i], v[0])) {
+				result.push(arr[i])
+			}
+
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	zipObject: function(pro, val) {
+		var result = {}
+		for (var i = 0; i < pro.length; i++) {
+			result[pro[i]] = val[i]
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	isArrayBuffer: function(value) {
+		return value instanceof ArrayBuffer
+	},
+	/**
+	 *
+	 *
+	 */
+	isDate: function(value) {
+		return value instanceof Date
+	},
+	/**
+	 *
+	 *
+	 */
+	isElement: function(value) {
+		return value instanceof HTMLElement
+	},
+	/**
+	 *
+	 *
+	 */
+	isNil: function(value) {
+		if (value == null || value == undefined) {
+			return true
+		}
+		return false
+	},
+	/**
+	 *
+	 *
+	 */
+	isEmpty: function(value) {
+		if (typeof(value) == 'string') {
+			if (value.length != 0) {
+				return false
+			}
+		}
+		if (typeof(value) == 'object') {
+			if (object.length != 0) {
+				return false
+			}
+		}
+		return true
+	},
+	/**
+	 *
+	 *
+	 */
+	isMatchWith: function(object, source, customizer) {
+		if (customizer(object, source)) {
+			return true
+		}
+	},
+	/**
+	 *
+	 *
+	 */
+	isRegExp: function(value) {
+		return value instanceof RegExp
+	},
+	/**
+	 *
+	 *
+	 */
+	isError: function(value) {
+		return value instanceof Error
+	},
+	/**
+	 *
+	 *
+	 */
+	filter: function(col, pre) {
+		for (var i = 0; i < col.length; i++) {
+			if (typeof(pre) == 'function') {
+				if (!pre(col[i])) {
+					return col[i]
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (col[i][pre]) {
+					return col[i]
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (col[i][pre[0]] == pre[1]) {
+					return col[i]
+				}
+			}
+			if (typeof(pre) == 'object') {
+				var key
+				if (col[i][key] == pre[key]) {
+					return col[i]
+				}
+			}
+		}
+	},
+	/**
+	 *
+	 *
+	 */
+	reject: function(col, pre) {
+		for (var i = 0; i < col.length; i++) {
+			if (typeof(pre) == 'function') {
+				if (pre(col[i])) {
+					return col[i]
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (col[i][pre]) {
+					return col[i]
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (col[i][pre[0]] == pre[1]) {
+					return col[i]
+				}
+			}
+			if (typeof(pre) == 'object') {
+				var key
+				if (col[i][key] !== pre[key]) {
+					return col[i]
+				}
+			}
+		}
+	},
+
+	/**
+	 *
+	 *
+	 */
+	nth: function(array, n) {
+		if (n < 0) {
+			n = array.length + n
+		}
+		return array[n]
+	},
+	/**
+	 *
+	 *
+	 */
+	pull: function(array, v1, v2) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (array[i] != v1 && array[i] != v2) {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	pullAllBy: function(arr, v, ite) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
+				return arr[i]
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	pullAllWith: function(arr, v, co) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			if (!co(arr[i], v[0])) {
+				result.push(arr[i])
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	xorBy: function(arr1, arr2, fn) {
+		var result = []
+		if (typeof(fn) == 'function') {
+			for (var i = 0; i < arr1.length; i++) {
+				if (fn(arr1[i]) != fn(arr2[i])) {
+					result.push(arr1[i])
+					result.push(arr2[i])
+				}
+			}
+		}
+		if (typeof(fn) == 'string') {
+			for (var i = 0; i < arr2.length; i++) {
+				if (arr1[0][fn] != arr2[i][fn]) {
+					result.push(arr2[i])
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+	zipObject: function(pro, val) {
+		var result = {}
+		for (var i = 0; i < pro.length; i++) {
+			result[pro[i]] = val[i]
+		}
+		return result
+	},
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
 
 	/**
 	 *
@@ -1026,5 +1366,93 @@ var LiuWei = {
 	 *
 	 */
 
+	/**
+	 *
+	 *
+	 */
 
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
+
+	/**
+	 *
+	 *
+	 */
 }
