@@ -296,7 +296,7 @@ var LiuWei = {
 	invert: function(obj) {
 		var result = {}
 		for (var key in obj) {
-			result[obj[key]] = obj[key]
+			result[obj[key]] = key
 		}
 		return result
 	},
@@ -872,9 +872,9 @@ var LiuWei = {
 		var result = []
 		for (var i = 0; i < arrays.length; i++) {
 			for (var j = 0; j < comparator; j++) {
-				if (fn(arrays[i], comparator[j])) {
-					result.push(arrays[i])
-					result.push(comparator[j])
+				if (compare(obj[i], other[j])) {
+					result.push(obj[i])
+					result.push(other[j])
 				}
 			}
 		}
@@ -1057,10 +1057,11 @@ var LiuWei = {
 	 *
 	 */
 	intersectionWith: function(arr1, arr2, co) {
+		var result = []
 		for (var i = 0; i < arr1.length; i++) {
 			for (var j = 0; j < arr2.length; j++) {
 				if (co(arr1[i], arr2[j])) {
-					return arr1[i]
+					return result.push(arr1[i])
 				}
 			}
 		}
@@ -1073,7 +1074,7 @@ var LiuWei = {
 		var result = []
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
-				return arr[i]
+				return result.push(arr[i])
 			}
 		}
 		return result
@@ -1320,7 +1321,43 @@ var LiuWei = {
 	 *
 	 *
 	 */
-
+	isnull: function(value) {
+		return value === null
+	},
+	/**
+	 *
+	 *
+	 */
+	isNumber: function(value) {
+		if (typeof(value) == 'number') {
+			return true
+		}
+		return false
+	},
+	/**
+	 *
+	 *
+	 */
+	isObjectlike: function(value) {
+		if (typeof(value) == 'object') {
+			return true
+		}
+		return false
+	},
+	/**
+	 *
+	 *
+	 */
+	add: function(augend, addend) {
+		return augend + addend
+	},
+	/**
+	 *
+	 *
+	 */
+	divide: function(dividend, divisor) {
+		return dividend / divisor
+	},
 	/**
 	 *
 	 *
