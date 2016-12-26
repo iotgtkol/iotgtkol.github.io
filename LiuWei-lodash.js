@@ -14,24 +14,50 @@ var LiuWei = {
 			result.push(fn(arr[i], i, arr))
 		}
 		return result
+
 	},
 	/**
 	 *迭代collection所有元素，返回通过predicate为truly的所有元素
 	 *predicate援引三个论据(value, index|key, collection)[predicate=_.identity]
 	 *collection为(object/array)
-	 *var user =[{ 'user': 'barney', 'age': 36, 'active': true },{ 'user': 'fred',   'age': 40, 'active': false }]
+	 *var user =[{ 'user':   'barney', 'age': 36, 'active': true },{ 'user': 'fred',   'age': 40, 'active': false }]
 	 *输入:filter(user, function(o) { return !o.active; })
 	 *输出: objects for ['fred']
 	 *输入:filter(users, ['active', false])
 	 *objects for ['fred']
 	 */
-	filter: function(collection, predicate) {
-		for (var i = 0; i < arr.length; i++) {
-			if (!fn(arr[i], i, arr) == true) {
-				arr.splice(arr[i], 1)
+	filter: function(col, pre) {
+		var result = []
+		for (var i = 0; i < col.length; i++) {
+			if (typeof pre == 'function') {
+				if (pre(col[i])) {
+					result.push(col[i])
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (col[i][pre[0]] == pre[1]) {
+					result.push(col[i])
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (col[i][pre]) {
+					result.push(col[i])
+				}
+			}
+			if (typeof(pre) == 'object') {
+				var flag = true
+				for (var key in pre) {
+					if (col[i][key] !== pre[key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					result.push(col[i])
+					break
+				}
 			}
 		}
-		return arr
+		return result
 	},
 	/**
 	 *创建由数组分裂的有两组的一个数组，第一个为通过断言为真得出对象第一个属性的值，第二个断言为假的其他属性的值
@@ -544,6 +570,20 @@ var LiuWei = {
 			}
 		}
 		return result
+	},
+	sortedIndexBy: function(array, value, ite) {
+		for (var i = 0; i < array.length; i++) {
+			if (typeof(ite) == 'function') {
+				if (ite(array[i]) == ite(value)) {
+					return i
+				}
+			}
+			if (typeof(ite) == 'string') {
+				if (array[i][ite] == value[ite]) {
+					return i
+				}
+			}
+		}
 	},
 	/**
 	 *数组各项求值
@@ -1335,8 +1375,8 @@ var LiuWei = {
 		return false
 	},
 	/**
-	 *
-	 *
+	 *判断参数是否为类数组对象
+	 *是返回真，否则为false
 	 */
 	isObjectlike: function(value) {
 		if (typeof(value) == 'object') {
@@ -1345,9 +1385,9 @@ var LiuWei = {
 		return false
 	},
 	/**
-	 *
-	 *
+	 * 求两个数的和。只考虑了为整数的情况
 	 */
+
 	add: function(augend, addend) {
 		return augend + addend
 	},
@@ -1362,134 +1402,475 @@ var LiuWei = {
 	 *
 	 *
 	 */
+	findIndex: function(array, pre) {
+		for (var i = 0; i < array.length; i++) {
+			if (typeof(pre) == 'string') {
+				if (array[i][pre]) {
+					return i
+				}
+			}
+			if (typeof(pre) == 'function') {
+				if (pre(array[i])) {
+					return i
+				}
+			}
+			if (typeof(pre) == 'object') {
+				var a = true
+				for (var key in array[i]) {
+					if (array[i][key] != pre[key]) {
+						break
+					} else {
+						return i
+					}
+				}
 
+
+			}
+			if (Array.isArray(pre)) {
+				if (array[i][pre[0]] == pre[1]) {
+					return i
+				}
+			}
+		}
+	},
 	/**
-	 *
-	 *
+	 * [defaults description]
+	 * @param  {[type]}    object [description]
+	 * @param  {...[type]} sou    [description]
+	 * @return {[type]}           [description]
+	 */
+	defaults: function(object, ...sou) {
+		for (var i = 0; i < sou.length; i++) {
+			for (var key in sou[i]) {
+				if (!object[key]) {
+					object[key] = sou[i][key]
+				}
+			}
+		}
+		return object
+	},
+	forIn: function(object, ite) {
+		for (var key in object) {
+			if (typeof(ite) == 'function') {
+				ite(object[key], key)
+			}
+		}
+		return object
+	},
+	forOwn: function(object, ite) {
+		for (var key in object) {
+			if (object.hasOwnProperty(key)) {
+				if (ite(object(key), key) === false) {
+					break
+				}
+			}
+		}
+		return object
+	},
+	functions: function(object) {
+		//Object.keys() 方法会返回一个由给定对象的所有可枚举自身属性的属性名组成的数组
+		return Object.keys(object)
+	},
+	/**
+	 * [functionsIn description] 返回函数的原有属性值
+	 * @param  {[type]}
+	 * @return {[type]} 原函数的参数值
+	 */
+	functionsIn: function(object) {
+		var result = []
+		for (var key in object) {
+			result.push(key)
+		}
+		return result
+	},
+	/**
+	 * [get description] 通过路径得到值 显示将所有的传入参数转为数组，这样便于计算
+	 * @param  {[type]} object  查找的对象  
+	 * @param  {[type]} path     对象的路径  递归调用上一次object.key的值返回值作为下一次的key
+	 * @param  {[type]} defaultValue 默认值  如果path路径在object中不纯在
+	 * @return {[type]}          通过路径的得到的值
+	 */
+	get: function(object, path, defaultValue) {
+		var result
+		if (typeof(path) == 'string') {
+			path = path.replace(/[\[\]\.]/g, '').split('') //y用正则匹配转化为一个数组
+		}
+		if (Array.isArray(path)) {
+			result = path.reduce((a, b) => {
+				try {
+					return a[b]
+				} catch (e) {
+					return defaultValue
+				}
+			}, object)
+		}
+		return result
+	},
+	/**
+	 * [has description] 判断对象是否有通过path路径的属性 用get来获取路径 如果为真这说明有path路径，否则为false
+	 * @param  {[type]}  object 判断对象
+	 * @param  {[type]}  path   路径
+	 * @return {Boolean}        
+	 */
+	has: function(object, path) {
+		if (get(object, path)) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 * [pick description]
+	 * @param  {[type]} object [description]
+	 * @param  {[type]} path   [description]
+	 * @return {[type]}        [description]
+	 */
+	pick: function(object, path) {
+		var result = {}
+		for (var i = 0; i < path.length; i++) {
+			if (path[i] in object) {
+				result[path[i]] = object[path[i]]
+			}
+		}
+		return result
+	},
+	pickBy: function(object, pre) {
+		var result = {}
+		for (var key in object) {
+			if (pre(object[key])) {
+				result[key] = object[key]
+			}
+		}
+		return result
+	},
+	values: function(object) {
+		var result = []
+		for (var key in object) {
+			if (object.hasOwnProperty(key)) {
+				result.push(object[key])
+			}
+		}
+		return result
+	},
+	valuesIn: function(object) {
+		var result = []
+		for (var key in object) {
+			result.push(object[key])
+		}
+		return reuslt
+	},
+	/**
+	 * 将字符串首个字母大写，其余的转换为小写字母
+	 * @param  {[type]}  FRED
+	 * @return {[type]}  Fred
+	 */
+	capitalize: function(str) {
+		var result
+		var s = str[0].toUppercase()
+		for (var i = 1; i < str.length; i++) {
+			s += str[i].toLowerCase()
+		}
+		return s
+	},
+	/**
+	 * 判断字符串是否以target为某个位置的值，
+	 * @param  {[type]} str    [description]
+	 * @param  {[type]} target 判断的条件 
+	 * @param  {[type]} pos    当pos为undefined时 其位字符串的长度
+	 * @return {[type]}      Boolean
+	 */
+	endsWith: function(str, target, pos) {
+		if (pos == undefined) {
+			pos = str.length
+		}
+		if (str[pos] == terget) {
+			return true
+		} else {
+			return false
+		}
+	},
+	/**
+	 * [sortedIndexBy description] 判断数组满足条件的索引值。
+	 * @param  {[type]} array [description]
+	 * @param  {[type]} value 数组的某项值
+	 * @param  {[type]} ite   接受两个参数  字符串及function
+	 * @return {[type]}      索引位置
+	 */
+	sortedIndexBy: function(array, value, ite) {
+		for (var i = 0; i < array.length; i++) {
+			if (itr instanceof Function) {
+				if (ite(value) == ite(array[i])) {
+					return i
+				}
+			}
+			if (typeof ite == 'string') {
+				if (array[i][ite] == value[ite]) {
+					return i
+				}
+			}
+		}
+	},
+	/**
+	 * 返回最后一个与满足条件的值的索引，因而+1  
+	 * @param  {[type]} array 查找的数组
+	 * @param  {[type]} value 数组中 的某项值
+	 * @param  {[type]} ite   接受两个参数 string function
+	 * @return {[type]}       vvalue 在数组中的对应项
+	 */
+	sortedLastIndexBy: function(array, value, ite) {
+		for (var i = array.length - 1; i >= 0; i--) {
+			if (ite instanceof Function) {
+				if (ite(array[i]) == ite(value)) {
+					return i + 1
+				}
+			}
+			if (typeof ite == 'string') {
+				if (array[i][ite] == value[ite]) {
+					return i + 1
+				}
+			}
+		}
+	},
+	/**
+	 * 从前开始遍历数组，如果后一项已经在前面的项中存在，则不push进新的数组
+	 * @param  {[type]} array 遍历的数组
+	 * @return {[type]}       相当于去重
+	 * 
+	 */
+	sortedUniq: function(array) {
+		var result = []
+		for (var i = 0; i < array.length; i++) {
+			if (result.indexOf(array[i]) == -1) {
+				result.push(array[i])
+			}
+		}
+		return result
+	},
+	/**
+	 * [union description]  将多个数组中的不同的值放进一个新的数组
+	 * @param  {...[type]} arrays 多个数组对象
+	 * @return {[type]}           数组中没有重复的数组成的新数组
+	 */
+	union: function(...arrays) {
+		var result = []
+		for (var i = 0; i < arguments.length; i++) {
+			for (var j = 0; j < arguments[i].length; j++) {
+				if (result.indexOf(arguments[i][j]) == -1) {
+					result.push(arguments[i][j])
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 * 判断数组中有没有...values  如果没有就将其添加进新数组中，并返回新的数组
+	 * @param  {[type]}    array  
+	 * @param  {...[type]} values 
+	 * @return {[type]}          即没有在数组中，也不是对象值 组成的新数组
+	 */
+	without: function(array, ...values) {
+		for (var i = 0; i < array.length; i++) {
+			for (var j = 0; j < values.length; j++) {
+				if (array[i] == values[j]) {
+					array.splice(i, 1)
+					i--
+				}
+			}
+		}
+		return array
+	},
+	/**
+	 *  paths 数组中 的项作为object的key值 如果数组中不包含对象的key值 则将key值付给新的对象；
+	 * @param  {[type]} object [description]
+	 * @param  {[type]} paths  [description]
+	 * @return {[type]}        
+	 */
+	omit: function(object, paths) {
+		var result = {}
+		for (var key in object) {
+			if (paths.indexOf(key) == -1) {
+				result[key] = object[key]
+			}
+		}
+		return result
+	},
+	/**
+	 * 将对象的自生指定的属性赋给数组，并返回
+	 * @param  {[type]} object [description]
+	 * @return {[type]}        [description]
+	 */
+	toPairs: function(object) {
+			var result = []
+			for (var key in object) {
+				if (Object.prototype.hasOwnProperty.call(object, key)) {
+					result.push([key, object[key]])
+				}
+			}
+			return result
+		}
+		/**
+		 * 将数组的原有属性以数组的形式输出
+		 * @param  {[type]} object [description]
+		 * @return {[type]}        [description]
+		 */
+	toPairsIn: function(object) {
+		var result = []
+		for (var key in object) {
+			result.push([key, object[key]])
+		}
+		return result
+	},
+	/**
+	 * [countBy description] 判断通过ite断言 col的每一项作为result的key属性   如果在如果已经在result中 则key值+1  否则赋值为1
+	 * @param  {[type]} col [description]
+	 * @param  {[type]} ite [description]
+	 * @return {[type]}     col[i]在result中出现的次数
+	 */
+	countBy: function(col, ite) {
+		var result = {}
+		var counter = 1
+
+		for (var i = 0; i < col.length; i++) {
+			if (typeof(ite) == 'function') {
+				if (ite(col[i]) in result) {
+					result[ite(col[i])] += counter
+				} else {
+					result[ite(col[i])] = counter
+				}
+			}
+			debugger
+			if (typeof ite == 'string') {
+				if (col[i][ite] in result) {
+					result[col[i][ite]] += counter
+				} else {
+					result[col[i][ite]] = counter
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 * 断言col中满足从fr位置开始满足pre的值
+	 * @param  {[type]} col 数组的判断方法尤其要注意，思路必须明确。否则很容易出错！
+	 * @param  {[type]} pre [description]
+	 * @param  {[type]} fr  [description]
+	 * @return {[type]}     [description]
+	 */
+	find: function(col, pre, fr) {
+		var result = []
+		if (fr == undefined) {
+			fr = 0
+		}
+		for (var i = fr; i < col.length; i++) {
+			if (typeof pre == 'function') {
+				if (pre(col[i])) {
+					result.push(col[i])
+					break
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (pre[0] in col[i]) {
+					if (col[i][pre[0]] == pre[1]) {
+						result.push(col[i])
+						break
+					}
+				}
+			}
+			if (typeof pre == 'string') {
+				if (col[i][pre]) {
+					result.push(col[i])
+					break
+				}
+			}
+			if (typeof pre == 'object') {
+				var flag = true
+				for (key in pre) {
+					if (pre[key] !== col[i][key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					result.push(col[i])
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 * 此方法与find类似，只是其实从集合的末尾开始到开头开始遍历。
+	 */
+	findLast: function(col, pre, fr) {
+		var result = []
+		if (fr == undefined) {
+			fr = col.length - 1
+		}
+		for (var i = fr; i >= 0; i--) {
+			if (typeof pre == 'function') {
+				if (pre(col[i])) {
+					return col[i]
+					break
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (pre[0] in col[i]) {
+					if (col[i][pre[0]] == pre[1]) {
+						result.push(col[i])
+						break
+					}
+				}
+			}
+			if (typeof pre == 'string') {
+				if (col[i][pre]) {
+					result.push(col[i])
+					break
+				}
+			}
+			if (typeof pre == 'object') {
+				var flag = true
+				for (key in pre) {
+					if (pre[key] !== col[i][key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					result.push(col[i])
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 * 
 	 */
 
-	/**
-	 *
-	 *
-	 */
+	every: function(col, pre) {
+		for (var i = 0; i < col.length; i++) {
+			if (typeof pre == 'object') {
+				var flag
+				for (var key in pre) {
+					if (key in col[i]) {
+						if (!col[i][key])
+							return false
+					}
+				}
+			}
+			if (pre instanceof Function) {
+				if (!pre(col[i])) {
+					return false
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (col[i][pre[0]] != pre[1]) {
+					return false
+				}
+			}
+			if (typeof pre == 'string') {
+				if (!col[i][pre]) {
+					return false
+				}
+			}
+		}
+		return true
+	},
 
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
-
-	/**
-	 *
-	 *
-	 */
 }
