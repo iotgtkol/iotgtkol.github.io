@@ -1707,7 +1707,7 @@ var LiuWei = {
 				}
 			}
 			return result
-		}
+		},
 		/**
 		 * 将数组的原有属性以数组的形式输出
 		 * @param  {[type]} object [description]
