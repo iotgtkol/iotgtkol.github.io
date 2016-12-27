@@ -910,8 +910,8 @@ var LiuWei = {
 	 */
 	xorWith: function(obj, other, compare) {
 		var result = []
-		for (var i = 0; i < arrays.length; i++) {
-			for (var j = 0; j < comparator; j++) {
+		for (var i = 0; i < obj.length; i++) {
+			for (var j = 0; j < other.length; j++) {
 				if (compare(obj[i], other[j])) {
 					result.push(obj[i])
 					result.push(other[j])
@@ -1111,13 +1111,11 @@ var LiuWei = {
 	 *
 	 */
 	pullAllBy: function(arr, v, ite) {
-		var result = []
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
-				return result.push(arr[i])
+				return arr[i]
 			}
 		}
-		return result
 	},
 	/**
 	 *
@@ -1460,9 +1458,7 @@ var LiuWei = {
 	forOwn: function(object, ite) {
 		for (var key in object) {
 			if (object.hasOwnProperty(key)) {
-				if (ite(object(key), key) === false) {
-					break
-				}
+				ite(object(key), key)
 			}
 		}
 		return object
@@ -1552,12 +1548,17 @@ var LiuWei = {
 		}
 		return result
 	},
+	/**
+	 * [valuesIn description]
+	 * @param  {[type]} object [description]
+	 * @return {[type]}        [description]
+	 */
 	valuesIn: function(object) {
 		var result = []
 		for (var key in object) {
 			result.push(object[key])
 		}
-		return reuslt
+		return result
 	},
 	/**
 	 * 将字符串首个字母大写，其余的转换为小写字母
@@ -1583,7 +1584,7 @@ var LiuWei = {
 		if (pos == undefined) {
 			pos = str.length
 		}
-		if (str[pos] == terget) {
+		if (str[pos] == target) {
 			return true
 		} else {
 			return false
@@ -1700,19 +1701,19 @@ var LiuWei = {
 	 * @return {[type]}        [description]
 	 */
 	toPairs: function(object) {
-			var result = []
-			for (var key in object) {
-				if (Object.prototype.hasOwnProperty.call(object, key)) {
-					result.push([key, object[key]])
-				}
+		var result = []
+		for (var key in object) {
+			if (Object.prototype.hasOwnProperty.call(object, key)) {
+				result.push([key, object[key]])
 			}
-			return result
-		},
-		/**
-		 * 将数组的原有属性以数组的形式输出
-		 * @param  {[type]} object [description]
-		 * @return {[type]}        [description]
-		 */
+		}
+		return result
+	},
+	/**
+	 * 将数组的原有属性以数组的形式输出
+	 * @param  {[type]} object [description]
+	 * @return {[type]}        [description]
+	 */
 	toPairsIn: function(object) {
 		var result = []
 		for (var key in object) {
@@ -1757,28 +1758,27 @@ var LiuWei = {
 	 * @return {[type]}     [description]
 	 */
 	find: function(col, pre, fr) {
-		var result = []
 		if (fr == undefined) {
 			fr = 0
 		}
 		for (var i = fr; i < col.length; i++) {
 			if (typeof pre == 'function') {
 				if (pre(col[i])) {
-					result.push(col[i])
+					return col[i]
 					break
 				}
 			}
 			if (Array.isArray(pre)) {
 				if (pre[0] in col[i]) {
 					if (col[i][pre[0]] == pre[1]) {
-						result.push(col[i])
+						return col[i]
 						break
 					}
 				}
 			}
 			if (typeof pre == 'string') {
 				if (col[i][pre]) {
-					result.push(col[i])
+					return col[i]
 					break
 				}
 			}
@@ -1790,11 +1790,10 @@ var LiuWei = {
 					}
 				}
 				if (flag) {
-					result.push(col[i])
+					return col[i]
 				}
 			}
 		}
-		return result
 	},
 	/**
 	 * 此方法与find类似，只是其实从集合的末尾开始到开头开始遍历。
@@ -1872,5 +1871,134 @@ var LiuWei = {
 		}
 		return true
 	},
+	/**
+	 * 
+	 */
+	toFinite: function(value) {
+		if (value == +Infinity) {
+			return 1.7976931348623157e+308
+		}
+		if (value == -Infinity) {
+			return -1.7976931348623157e+308
+		}
+		if (value == Number.MIN_VALUE) {
+			return 5e-324
+		}
+		if (value == -Number.MIN_VALUE) {
+			return -5e-324
+		} else {
+			return Number(value)
+		}
+	},
+	/**
+	 * 
+	 */
+	toInteger: function(value) {
+		if (value == +Infinity) {
+			return 1.7976931348623157e+308
+		}
+		if (value == -Infinity) {
+			return -1.7976931348623157e+308
+		}
+		if (value == Number.MIN_VALUE) {
+			return 0
+		}
+		if (value == -Number.MIN_VALUE) {
+			return 0
+		} else {
+			return parseInt(value)
+		}
+	},
+	/**
+	 * [toNumber description]
+	 * @param  {[type]} value [description]
+	 * @return {[type]}       [description]
+	 */
+	toNumber: function(value) {
+		if (value == +Infinity) {
+			return Infinity
+		}
+		if (value == -Infinity) {
+			return -Infinity
+		}
+		if (value == Number.MIN_VALUE) {
+			return 5e-324
+		}
+		if (value == -Number.MIN_VALUE) {
+			return -5e-324
+		} else {
+			return Number(value)
+		}
+	},
+	/**
+	 * [min description]
+	 * @param  {[type]} array [description]
+	 * @return {[type]}       [description]
+	 */
+	min: function(array) {
+		if (array.length == 0) {
+			return undefined
+		}
+
+		for (var i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				[array[i], array[i + 1]] = [array[i + 1], array[i]]
+			} else {
+				continue
+			}
+		}
+		return array[array.length - 1]
+	},
+	/**
+	 * [minBy description]
+	 * @param  {[type]} arr [description]
+	 * @param  {[type]} ite [description]
+	 * @return {[type]}     [description]
+	 */
+	minBy: function(arr, ite) {
+		for (var i = 0; i < arr.length; i++) {
+			if (ite instanceof Function) {
+				if (ite(arr[i]) < ite(arr[i + 1])) {
+					[arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]
+				} else {
+					continue
+				}
+			}
+			if (typeof ite == 'string') {
+				if (arr[i][ite] < arr[i + 1][ite]) {
+					[arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]
+				}
+			}
+			return arr[arr.length - 1]
+		}
+	},
+	/**
+	 * [multiply description]
+	 * @param  {...[type]} mul [description]
+	 * @return {[type]}        [description]
+	 */
+	multiply: function(...mul) {
+		var mu = mul[0]
+		for (var i = 1; i < mul.length; i++) {
+			mu *= mul[i]
+		}
+		return mu
+	},
+	/**
+	 * 
+	 */
+	assignIn: function(obj, ...sou) {
+		var result = obj
+		for (var i = 0; i < sou.length; i++) {
+			for (var key in sou[i]) {
+				if (!result.hasOwnProperty(key)) {
+					result[key] = sou[i][key]
+				}
+			}
+		}
+		return result
+	},
+
+
 
 }
