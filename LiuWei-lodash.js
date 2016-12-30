@@ -466,20 +466,6 @@ var LiuWei = {
 	 *
 	 *
 	 */
-	join: function(arr, value) {
-		var result = ''
-		if (value == undefined) {
-			value = ','
-		}
-		for (var i = 0; i < arr.length - 1; i++) {
-			result += arr[i] + value
-		}
-		return result
-	},
-	/**
-	 *
-	 *
-	 */
 	last: function(arr) {
 		var l = arr.length
 		var a
@@ -912,7 +898,7 @@ var LiuWei = {
 		var result = []
 		for (var i = 0; i < obj.length; i++) {
 			for (var j = 0; j < other.length; j++) {
-				if (compare(obj[i], other[j])) {
+				if (!compare(obj[i], other[j])) {
 					result.push(obj[i])
 					result.push(other[j])
 				}
@@ -993,20 +979,20 @@ var LiuWei = {
 				}
 			}
 			if (Array.isArray(pre)) {
-				if (!array[i][pre[0]] == pre[1]) {
+				if (array[i][pre[0]] == pre[1]) {
 					result.push(array[i])
 				}
 			}
 			if (typeof(pre) == 'string') {
-				if (array[i].hasOwnProperty(pre)) {
-					result.push(array[i])
+				if (pre in array[i]) {
+					result.unshift(array[i])
 				}
 			}
 			if (typeof(pre) == 'object') {
 				var key
 				for (key in array[i]) {
 					if (array[i][key] !== pre[key]) {
-						result.push(array[i])
+						result.unshift(array[i])
 						break
 					}
 				}
@@ -1096,26 +1082,29 @@ var LiuWei = {
 	 *
 	 *
 	 */
-	intersectionWith: function(arr1, arr2, co) {
+	intersectionWith: function(arr1, arr2, com) {
 		var result = []
 		for (var i = 0; i < arr1.length; i++) {
 			for (var j = 0; j < arr2.length; j++) {
-				if (co(arr1[i], arr2[j])) {
-					return result.push(arr1[i])
+				if (com(arr1[i], arr2[j])) {
+					result.push(arr1[i])
 				}
 			}
 		}
+		return result
 	},
 	/**
 	 *
 	 *
 	 */
 	pullAllBy: function(arr, v, ite) {
+		var result = []
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
-				return arr[i]
+				result.push(arr[i])
 			}
 		}
+		return result
 	},
 	/**
 	 *
@@ -1998,7 +1987,56 @@ var LiuWei = {
 		}
 		return result
 	},
-
+	/**
+	 * [findLastIndex description]
+	 * @param  {[type]} array [description]
+	 * @param  {[type]} pre   [description]
+	 * @param  {[type]} fr    [description]
+	 * @return {[type]}       [description]
+	 */
+	findLastIndex: function(array, pre, fr) {
+		if (fr == undefined) {
+			fr = array.length - 1
+		}
+		for (var i = fr; i >= 0; i--) {
+			if (typeof pre == 'function') {
+				if (pre(array[i])) {
+					return i
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (array[i][pre]) {
+					return i
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (array[i][pre[0]] == pre[1]) {
+					return i
+				}
+			}
+			if (pre instanceof Object) {
+				var flag = true
+				for (var key in pre) {
+					if (array[i][key] !== pre[key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					return i
+				}
+			}
+		}
+	},
+	/**
+	 *
+	 *
+	 */
+	join: function(arr, sep) {
+		if (sep == undefined) {
+			sep = ','
+		}
+		return arr.join(sep)
+	},
 
 
 }
