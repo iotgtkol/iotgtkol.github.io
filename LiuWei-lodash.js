@@ -2024,6 +2024,109 @@ var LiuWei = {
 		}
 		return arr.join(sep)
 	},
+        sortedLastIndexOf: function(array, value) {
+		for (var i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
+				return i
+			}
+		}
+	},
+	/**
+	 * [sortedUniqBy description]
+	 * @param  {[type]} arr [description]
+	 * @param  {[type]} ite [description]
+	 * @return {[type]}     [description]
+	 */
+	sortedUniqBy: function(arr, ite) {
+		var result = []
+		var temp = []
+		for (var i = 0; i < arr.length; i++) {
+			if (temp.indexOf(ite(arr[i])) == -1) {
+				temp.push(ite(arr[i]))
+				result.push(arr[i])
+			}
+		}
+		return result
+	},
+	/**
+	 * 
+	 */
+	takeRightWhile: function(array, pre) {
+		var result = []
+		for (var i = array.length - 1; i >= 0; i--) {
+			if (typeof(pre) == 'function') {
+				if (pre(array[i])) {
+					result.unshift(array[i])
+				} else {
+					break
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (array[i][pre[0]] == pre[1]) {
+					result.unshift(array[i])
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (!array[i][pre]) {
+					break
+				} else {
+					result.unshift(array[i])
+				}
+			}
+			if (pre instanceof Object) {
+				var flag = true
+				for (var key in pre) {
+					if (pre[key] !== array[i][key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					result.unshift(array[i])
+				}
+			}
+		}
+		return result
+	},
+	/**
+	 * [takeWhile description]
+	 * @param  {[type]} arr [description]
+	 * @param  {[type]} pre [description]
+	 * @return {[type]}     [description]
+	 */
+	takeWhile: function(arr, pre) {
+		var result = []
+		for (var i = 0; i < arr.length; i++) {
+			if (typeof(pre) == 'function') {
+				if (pre(arr[i])) {
+					result.push(arr[i])
+				}
+			}
+			if (Array.isArray(pre)) {
+				if (arr[i][pre[0]] == pre[1]) {
+					result.push(arr[i])
+				}
+			}
+			if (typeof(pre) == 'string') {
+				if (!arr[i][pre]) {
+					break
+				} else {
+					result.push(arr[i])
+				}
+			}
+			if (pre instanceof Object) {
+				var flag = true
+				for (var key in pre) {
+					if (pre[key] !== arr[i][key]) {
+						flag = false
+					}
+				}
+				if (flag) {
+					result.push(arr[i])
+				}
+			}
+		}
+		return result
+	},
 
 
 }
