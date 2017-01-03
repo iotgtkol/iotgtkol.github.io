@@ -1575,7 +1575,7 @@ var LiuWei = {
 	 */
 	sortedIndexBy: function(array, value, ite) {
 		for (var i = 0; i < array.length; i++) {
-			if (itr instanceof Function) {
+			if (ite instanceof Function) {
 				if (ite(value) == ite(array[i])) {
 					return i
 				}
