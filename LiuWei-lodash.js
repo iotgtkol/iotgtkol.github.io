@@ -1288,19 +1288,6 @@ var LiuWei = {
 	 *
 	 *
 	 */
-	pullAllBy: function(arr, v, ite) {
-		var result = []
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i][ite] != v[0][ite] && arr[i][ite] != v[1][ite]) {
-				return arr[i]
-			}
-		}
-		return result
-	},
-	/**
-	 *
-	 *
-	 */
 	pullAllWith: function(arr, v, co) {
 		var result = []
 		for (var i = 0; i < arr.length; i++) {
